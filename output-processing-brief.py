@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import csv
 import sys
-print(sys.argv)
 csv.field_size_limit(sys.maxsize)  # make sure we can write very large csv fields
 import argparse
 import numpy
@@ -20,6 +19,10 @@ parser.add_argument('--param')
 args = parser.parse_args()
 
 glfo = glutils.read_glfo(args.param + '/hmm/germline-sets', locus=args.locus)
+
+print(sys.argv)
+print 'infile =', args.infile
+print 'param =', args.param
 
 cp = ClusterPath()
 cp.readfile(args.infile)
@@ -63,17 +66,26 @@ sfs_clusters = sorted(biggest_clusters, key=lambda q: utils.fay_wu_h(annotations
 # cluster size: print x biggest clusters
 print '\x1b[1;32;40m' + '  printing the largest clusters' + '\x1b[0m'
 for cluster in sorted_clusters[:5]:
+    # if sorted_clusters.index(cluster) < 50:
+    #     print_stuff(annotations[cluster])
     print_stuff(annotations[cluster])
 
 # high mean %SHM: print most mutated clusters from 100 biggest clusters
 print '\x1b[1;32;40m' + '  printing the most mutated clusters (within 100 biggest)' + '\x1b[0m'
-for cluster in shm_clusters[:5]:
+for cluster in shm_clusters[:20]:
+    # if sorted_clusters.index(cluster) < 50:
+    #     print_stuff(annotations[cluster])
     print_stuff(annotations[cluster])
 
 # Highest SFS Fay Wu H scores
 print '\x1b[1;32;40m' + '  printing clusters with high SFS (within 100 biggest)' + '\x1b[0m'
 for cluster in sfs_clusters[:5]:
     print_stuff(annotations[cluster])
+
+
+if args.locus != 'igh': #continue to bnAb VH gene usage if we're looking at heavy chain
+    sys.exit()
+
 
 # published bnAb VH gene usage (Yu and Guan, Frontiers in Immunology, 2014)
 cd4bs_genes = ['IGHV1-2', 'IGHV1-46', 'IGHV1-3', 'IGHV4-61']

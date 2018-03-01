@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import csv
 import sys
-print(sys.argv)
 csv.field_size_limit(sys.maxsize)  # make sure we can write very large csv fields
 import argparse
 import numpy
@@ -26,13 +25,17 @@ cp.readfile(args.infile)
 best_partition = cp.partitions[cp.i_best]
 # sorted_clusters = sorted(best_partition, key=len, reverse=True)  # sort by size
 
+print(sys.argv)
+print 'infile =', args.infile
+print 'param =', args.param
+
 # clonal family attributes to print
-print 'index    genes                                        size    n muts    SHM     rep frac     CDR3                                FayWuH'
+print 'index    genes                                        size    n muts    SHM     rep frac     CDR3                      FayWuH'
 print '                                                            mean  med                        len  seq'
 def print_stuff(line):
     cluster_index = sorted_clusters.index(cluster)
     cdr3_seq = line['naive_seq'][(line['codon_positions']['v']):((line['codon_positions']['j'])+3)] #get nt sequence of CDR3 from first base of cysteine through last base of tryptophan
-    print '%4s     %s %s %s %5d %5d %5d %7.3f   %8.4f     %2d   %-30s %4.2f' % (cluster_index, utils.color_gene(line['v_gene'], width=15), utils.color_gene(line['d_gene'], width=15), utils.color_gene(line['j_gene'], width=10), len(line['unique_ids']), numpy.mean(line['n_mutations']), numpy.median(line['n_mutations']), numpy.mean(line['mut_freqs']), float(len(cluster)) / n_total, (line['cdr3_length']/3), Seq(cdr3_seq).translate(), utils.fay_wu_h(line, debug=False))
+    print '%4s     %s  %s %5d %5d %5d %7.3f   %8.4f     %2d   %-20s %4.2f' % (cluster_index, utils.color_gene(line['v_gene'], width=30), utils.color_gene(line['j_gene'], width=10), len(line['unique_ids']), numpy.mean(line['n_mutations']), numpy.median(line['n_mutations']), numpy.mean(line['mut_freqs']), float(len(cluster)) / n_total, (line['cdr3_length']/3), Seq(cdr3_seq).translate(), utils.fay_wu_h(line, debug=False))
 
 # formatting necessity
 def getkey(uid_list):
@@ -62,17 +65,17 @@ sfs_clusters = sorted(biggest_clusters, key=lambda q: utils.fay_wu_h(annotations
 
 # cluster size: print x biggest clusters
 print '\x1b[1;32;40m' + '  printing the largest clusters' + '\x1b[0m'
-for cluster in sorted_clusters[:5]:
+for cluster in sorted_clusters[:10]:
     print_stuff(annotations[cluster])
 
 # high mean %SHM: print most mutated clusters from 100 biggest clusters
 print '\x1b[1;32;40m' + '  printing the most mutated clusters (within 100 biggest)' + '\x1b[0m'
-for cluster in shm_clusters[:5]:
+for cluster in shm_clusters[:20]:
     print_stuff(annotations[cluster])
 
 # Highest SFS Fay Wu H scores
 print '\x1b[1;32;40m' + '  printing clusters with high SFS (within 100 biggest)' + '\x1b[0m'
-for cluster in sfs_clusters[:5]:
+for cluster in sfs_clusters[:10]:
     print_stuff(annotations[cluster])
 
 # # published bnAb VH gene usage (Yu and Guan, Frontiers in Immunology, 2014)
