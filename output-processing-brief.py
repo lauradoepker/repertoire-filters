@@ -87,10 +87,10 @@ if args.locus != 'igh': #continue to bnAb VH gene usage if we're looking at heav
     sys.exit()
 
 
-# published bnAb VH gene usage (Yu and Guan, Frontiers in Immunology, 2014)
-cd4bs_genes = ['IGHV1-2', 'IGHV1-46', 'IGHV1-3', 'IGHV4-61']
+# published bnAb VH gene usage (Yu and Guan, Frontiers in Immunology, 2014 and Wu and Kong, Curr Op in Immunol, 2016)
+cd4bs_genes = ['IGHV1-2', 'IGHV1-46', 'IGHV1-3', 'IGHV4-61', 'IGHV1-69', 'IGHV3-23', 'IGHV3-30']
 glycan_genes = ['IGHV3-21', 'IGHV1-8', 'IGHV3-20', 'IGHV3-33', 'IGHV4-39', 'IGHV4-59', 'IGHV4-4']
-bridging_genes = ['IGHV1-3', 'IGHV3-30']
+bridging_genes = ['IGHV1-3', 'IGHV3-30', 'IGHV1-28']
 mper_genes = ['IGHV1-69', 'IGHV2-5', 'IGHV3-15', 'IGHV5-51']
 
 # CD4bs bnAb VH gene usage
