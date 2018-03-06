@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--infile')
 parser.add_argument('--locus')
 parser.add_argument('--param')
+parser.add_argument('--nclust')
 args = parser.parse_args()
 
 glfo = glutils.read_glfo(args.param + '/hmm/germline-sets', locus=args.locus)
@@ -35,7 +36,20 @@ print '                                                            mean  med    
 def print_stuff(line):
     cluster_index = sorted_clusters.index(cluster)
     cdr3_seq = line['naive_seq'][(line['codon_positions']['v']):((line['codon_positions']['j'])+3)] #get nt sequence of CDR3 from first base of cysteine through last base of tryptophan
-    print '%4s     %s %s %s %5d %5d %5d %7.3f   %8.4f     %2d   %-30s %4.2f' % (cluster_index, utils.color_gene(line['v_gene'], width=15), utils.color_gene(line['d_gene'], width=15), utils.color_gene(line['j_gene'], width=10), len(line['unique_ids']), numpy.mean(line['n_mutations']), numpy.median(line['n_mutations']), numpy.mean(line['mut_freqs']), float(len(cluster)) / n_total, (line['cdr3_length']/3), Seq(cdr3_seq).translate(), utils.fay_wu_h(line, debug=False))
+    print '%4s     %s %s %s %5d %5d %5d %7.3f   %8.4f     %2d   %-30s %4.2f' % (
+            cluster_index,
+            utils.color_gene(line['v_gene'], width=15),
+            utils.color_gene(line['d_gene'], width=15),
+            utils.color_gene(line['j_gene'], width=10),
+            len(line['unique_ids']),
+            numpy.mean(line['n_mutations']),
+            numpy.median(line['n_mutations']),
+            numpy.mean(line['mut_freqs']),
+            float(len(cluster)) / n_total,
+            (line['cdr3_length']/3),
+            Seq(cdr3_seq).translate(),
+            utils.fay_wu_h(line, debug=False)
+            )
 
 # formatting necessity
 def getkey(uid_list):
@@ -72,7 +86,7 @@ for cluster in sorted_clusters[:5]:
 
 # high mean %SHM: print most mutated clusters from 100 biggest clusters
 print '\x1b[1;32;40m' + '  printing the most mutated clusters (within 100 biggest)' + '\x1b[0m'
-for cluster in shm_clusters[:20]:
+for cluster in shm_clusters[:int(args.nclust)]:
     # if sorted_clusters.index(cluster) < 50:
     #     print_stuff(annotations[cluster])
     print_stuff(annotations[cluster])
