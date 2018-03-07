@@ -35,8 +35,16 @@ print 'index    genes                                        size    n muts    S
 print '                                                            mean  med                        len  seq'
 def print_stuff(line):
     cluster_index = sorted_clusters.index(cluster)
-    cdr3_seq = line['naive_seq'][(line['codon_positions']['v']):((line['codon_positions']['j'])+3)] #get nt sequence of CDR3 from first base of cysteine through last base of tryptophan
-    print '%4s     %s %s %s %5d %5d %5d %7.3f   %8.4f     %2d   %-30s %4.2f' % (
+    naive_cdr3, matureiseq0_cdr3 = utils.subset_sequences(line, iseq=0, restrict_to_region='cdr3') # line['naive_seq'][(line['codon_positions']['v']):((line['codon_positions']['j'])+3)] #get nt sequence of CDR3 from first base of cysteine through last base of tryptophan
+    # mature_cdr3_seqs = []  # trying to translate the consensus cdr3 so I can search these with my seed seqs
+    #     for iseq in range(len(line['unique_ids'])):
+    #         naive_cdr3_seq, mature_cdr3_seq = utils.subset_sequences(line, iseq=iseq, restrict_to_region='cdr3')
+    #         mature_cdr3_seqs.append(mature_cdr3_seq)
+    # translated_cdr3 = Seq().... not done
+    cdr3_aa = '%-30s' % Seq(naive_cdr3).translate()
+    if any('-ig' in s for s in line['unique_ids']):
+        cdr3_aa = utils.color('red', cdr3_aa, width=30)
+    print '%4s     %s %s %s %5d %5d %5d %7.3f   %8.4f     %2d   %s %4.2f' % (
             cluster_index,
             utils.color_gene(line['v_gene'], width=15),
             utils.color_gene(line['d_gene'], width=15),
@@ -47,9 +55,12 @@ def print_stuff(line):
             numpy.mean(line['mut_freqs']),
             float(len(cluster)) / n_total,
             (line['cdr3_length']/3),
-            Seq(cdr3_seq).translate(),
-            utils.fay_wu_h(line, debug=False)
+            cdr3_aa,
+            utils.fay_wu_h(line, debug=False),
             )
+    if len(line['unique_ids']) == 174:
+        print line['unique_ids']
+        print utils.print_reco_event(line)
 
 # formatting necessity
 def getkey(uid_list):
@@ -70,6 +81,7 @@ with open(args.infile.replace('.csv', '-cluster-annotations.csv')) as csvfile:
 
 # sort by size
 sorted_clusters = sorted(annotations, key=lambda q: len(annotations[q]['unique_ids']), reverse=True)
+# sorted_clusters = [c for c in sorted_clusters if utils.is_functional(annotations[c])] # checks if the cluster contains ANY non-functional sequences
 n_total = sum([len(cluster) for cluster in sorted_clusters])
 
 # add more criteria
@@ -85,8 +97,9 @@ for cluster in sorted_clusters[:5]:
     print_stuff(annotations[cluster])
 
 # high mean %SHM: print most mutated clusters from 100 biggest clusters
+mutclust = int(args.nclust)
 print '\x1b[1;32;40m' + '  printing the most mutated clusters (within 100 biggest)' + '\x1b[0m'
-for cluster in shm_clusters[:int(args.nclust)]:
+for cluster in shm_clusters[:mutclust]:
     # if sorted_clusters.index(cluster) < 50:
     #     print_stuff(annotations[cluster])
     print_stuff(annotations[cluster])
