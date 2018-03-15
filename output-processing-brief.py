@@ -58,9 +58,10 @@ def print_stuff(line):
             cdr3_aa,
             utils.fay_wu_h(line, debug=False),
             )
-    if len(line['unique_ids']) == 174:
-        print line['unique_ids']
-        print utils.print_reco_event(line)
+# Troubleshooting... looking at a cluster of a certain size:
+    # if len(line['unique_ids']) == 174:
+    #     print line['unique_ids']
+    #     print utils.print_reco_event(line)
 
 # formatting necessity
 def getkey(uid_list):
@@ -106,7 +107,7 @@ for cluster in shm_clusters[:mutclust]:
 
 # Highest SFS Fay Wu H scores
 print '\x1b[1;32;40m' + '  printing clusters with high SFS (within 100 biggest)' + '\x1b[0m'
-for cluster in sfs_clusters[:5]:
+for cluster in sfs_clusters[:10]:
     print_stuff(annotations[cluster])
 
 
@@ -128,10 +129,10 @@ def boolfunc(q):
         return False
     return True
 
-interesting_clusters = [cluster for cluster in sorted_clusters if boolfunc(cluster)]
+interesting_clusters = [cluster for cluster in biggest_clusters if boolfunc(cluster)]
 print '\x1b[1;32;40m' + '  found %d cd4bs clusters, printing the 5 largest hits' % len(interesting_clusters)
 sorted_interesting = sorted(interesting_clusters, key=lambda q: len(annotations[q]['unique_ids']), reverse=True)
-for cluster in sorted_interesting[0:5]: # five biggest cd4bs clusters
+for cluster in sorted_interesting[0:10]: # five biggest cd4bs clusters
     print_stuff(annotations[cluster])
 
 
@@ -143,10 +144,10 @@ def boolfunc(q):
         return False
     return True
 
-interesting_clusters = [cluster for cluster in sorted_clusters if boolfunc(cluster)]
+interesting_clusters = [cluster for cluster in biggest_clusters if boolfunc(cluster)]
 print '\x1b[1;32;40m' + '  found %d glycan clusters, printing the 5 largest hits' % len(interesting_clusters)
 sorted_interesting = sorted(interesting_clusters, key=lambda q: len(annotations[q]['unique_ids']), reverse=True)
-for cluster in sorted_interesting[0:5]: # five biggest cd4bs clusters
+for cluster in sorted_interesting[0:10]: # five biggest cd4bs clusters
     print_stuff(annotations[cluster])
 
 
@@ -158,10 +159,10 @@ def boolfunc(q):
         return False
     return True
 
-interesting_clusters = [cluster for cluster in sorted_clusters if boolfunc(cluster)]
+interesting_clusters = [cluster for cluster in biggest_clusters if boolfunc(cluster)]
 print '\x1b[1;32;40m' + '  found %d bridging region clusters, printing the 5 largest hits' % len(interesting_clusters)
 sorted_interesting = sorted(interesting_clusters, key=lambda q: len(annotations[q]['unique_ids']), reverse=True)
-for cluster in sorted_interesting[0:5]: # five biggest cd4bs clusters
+for cluster in sorted_interesting[0:10]: # five biggest cd4bs clusters
     print_stuff(annotations[cluster])
 
 
@@ -173,10 +174,10 @@ def boolfunc(q):
         return False
     return True
 
-interesting_clusters = [cluster for cluster in sorted_clusters if boolfunc(cluster)]
+interesting_clusters = [cluster for cluster in biggest_clusters if boolfunc(cluster)]
 print '\x1b[1;32;40m' + '  found %d mper region clusters, printing the 5 largest hits' % len(interesting_clusters)
 sorted_interesting = sorted(interesting_clusters, key=lambda q: len(annotations[q]['unique_ids']), reverse=True)
-for cluster in sorted_interesting[0:5]: # five biggest cd4bs clusters
+for cluster in sorted_interesting[0:10]: # five biggest cd4bs clusters
     print_stuff(annotations[cluster])
 
 
