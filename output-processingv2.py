@@ -50,6 +50,11 @@ def print_stuff(line):
     utils.print_reco_event(utils.synthesize_single_seq_line(line, iseq=0))  # print ascii-art representation of the rearrangement event
     print
 
+    # Troubleshooting... looking at a cluster of a certain size:
+    if Seq(cdr3_seq).translate() == "CATHGPGSYSSALDIW":
+        print line['unique_ids']
+        print utils.print_reco_event(line)
+
 # formatting necessity
 def getkey(uid_list):
     return ':'.join(uid_list)
